@@ -197,6 +197,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       function chooseHero() {
+		console.log("choosing");
         const title = document.querySelector("h1");
         const subtitle = document.createElement("div");
         subtitle.textContent = "(random!)";
@@ -222,7 +223,7 @@ document.addEventListener("DOMContentLoaded", () => {
           chosenHero = chosenHero = getHero(current_day);
           subtitle.textContent = `Day #${current_day} (${getHoursUntilNextDay().toFixed(0)} hours left)`;
         }
-
+		console.log(chosenHero);
         title.appendChild(subtitle);
       }
 
@@ -311,15 +312,12 @@ document.addEventListener("DOMContentLoaded", () => {
           lastGuess.classList.remove("animate__animated");
         }
         const stats = [
-          { id: "primary_attr", label: "Attribute", value: `${getPrimaryAttrIcon(hero.primary_attr)}` },
           { id: "gender", label: "Gender", value: hero.gender },
-          { id: "difficulty", label: "Difficulty", value: createDiamonds(hero.difficulty) },
+          { id: "race", label: "Race", value: hero.race },
           { id: "weapon_type", label: "Weapon", value: hero.weapon_type, tooltip: "<p>Possible weapon types are:</p><br><ul><li>Unarmed</li><li>Bow</li><li>Blunt</li><li>Blade (anything with an edge)</li><li>Magical</li><li>Other(guns, spit, etc)</li></ul>" },
-          { id: "roles", label: false, value: hero.roles.join(', '), tooltip: "From Dota 2 official website" },
-          { id: "attack_range", label: "Attack Range", value: `${hero.attack_range} ${getAttackTypeIcon(hero.attack_type, chosenHero.attack_type)}` },
-          { id: "armor", label: "Armor", value: (hero.base_armor + hero.base_agi * 0.167).toFixed(1), tooltip: "Armor at level 1 without any bonuses." },
-          { id: "move_speed", label: "Move Speed", value: hero.move_speed },
-          { id: "legs", label: "Legs", value: hero.legs, tooltip: "<ul><li>Legs do NOT count the mount.</li><li>Legs do NOT count hands, even if the hero stands on it.</li></ul>" },
+          { id: "roles", label: "Roles", value: hero.roles.join(', '), tooltip: "From Dota 2 official website" },
+          { id: "age", label: "Age", value: hero.age, tooltip: "5000+ for immortals" },
+          { id: "region", label: "Region", value: hero.region },
         ];
 
         stats.forEach((stat, index) => {
@@ -390,6 +388,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       function openFeedbackModal(heroName) {
+		  return;
         const modal = document.getElementById('feedback-modal');
         const closeButton = modal.querySelector('.close-button');
 
@@ -420,18 +419,12 @@ document.addEventListener("DOMContentLoaded", () => {
           const dynamicFieldsContainer = document.getElementById('dynamic-feedback-fields');
 
           const stats = [
-            { id: "primary_attr", label: "Attribute" },
-            { id: "gender", label: "Gender" },
-            { id: "difficulty", label: "Difficulty" },
-            { id: "weapon_type", label: "Weapon", disclaimer: "Possible weapon types are:<br><ul><li>Unarmed</li><li>Bow</li><li>Blunt</li><li>Blade (anything with an edge)</li><li>Magical</li><li>Other(guns, spit, etc)</li></ul>" },
-            { id: "roles", label: "Roles", disclaimer: "Values directly from Dota 2 official website. (I also don't agree with some)" },
-            { id: "attack_range", label: "Attack Range", },
-            { id: "armor", label: "Armor", disclaimer: "Armor at level 1 without any bonuses." },
-            { id: "move_speed", label: "Move Speed" },
-            {
-              id: "legs", label: "Legs", disclaimer: `<ul><li>Legs do NOT count the mount (horse, lizard), just the hero.
-  <li>Legs do NOT count hands, even if the hero stands on it. If it has opposing thumbs, it doesn't count.
-  <li>Underlord do not have 4 legs, he has 4 arms, 2 legs. Don't fight me, fight Valve</ul>` },
+            { id: "gender", label: "Gender", value: hero.gender },
+          { id: "race", label: "Race", value: hero.race },
+          { id: "weapon_type", label: "Weapon", value: hero.weapon_type, tooltip: "<p>Possible weapon types are:</p><br><ul><li>Unarmed</li><li>Bow</li><li>Blunt</li><li>Blade (anything with an edge)</li><li>Magical</li><li>Other(guns, spit, etc)</li></ul>" },
+          { id: "roles", label: "Roles", value: hero.roles.join(', '), tooltip: "From Dota 2 official website" },
+          { id: "age", label: "Age", value: hero.age, tooltip: "5000+ for immortals" },
+          { id: "region", label: "Region", value: hero.region },
           ];
 
           stats.forEach(stat => {
@@ -504,15 +497,13 @@ document.addEventListener("DOMContentLoaded", () => {
       function compareStats(guessHero, chosenHero, guessDiv) {
         let stats = "";
 
-        stats += compareText(guessHero.primary_attr, chosenHero.primary_attr, guessDiv.querySelector('#primary_attr'));
+        
         stats += compareText(guessHero.gender, chosenHero.gender, guessDiv.querySelector('#gender'));
-        stats += compareNumber(guessHero.difficulty, chosenHero.difficulty, guessDiv.querySelector('#difficulty'));
+        stats += compareText(guessHero.race, chosenHero.race, guessDiv.querySelector('#race'));
         stats += compareText(guessHero.weapon_type, chosenHero.weapon_type, guessDiv.querySelector('#weapon_type'));
         stats += compareArrayIndividual(guessHero.roles, chosenHero.roles, guessDiv.querySelector('#roles'));
-        stats += compareAttack(guessHero.attack_range, chosenHero.attack_range, guessHero.attack_type, chosenHero.attack_type, guessDiv.querySelector('#attack_range'));
-        stats += compareNumber((guessHero.base_armor + guessHero.base_agi * 0.167).toFixed(1), (chosenHero.base_armor + chosenHero.base_agi * 0.167).toFixed(1), guessDiv.querySelector('#armor'));
-        stats += compareNumber(guessHero.move_speed, chosenHero.move_speed, guessDiv.querySelector('#move_speed'));
-        stats += compareNumber(guessHero.legs, chosenHero.legs, guessDiv.querySelector('#legs'));
+        stats += compareNumber(guessHero.age, chosenHero.age, guessDiv.querySelector('#age'));
+        stats += compareText(guessHero.region, chosenHero.region, guessDiv.querySelector('#region'));
 
         suggestedStats.push(stats);
       }
@@ -630,7 +621,7 @@ document.addEventListener("DOMContentLoaded", () => {
             result = '🟩';
           } else {
             // Close call
-            if (difference < 0.6) {
+            if (difference < 2) {
               div.classList.add("partial");
             }
             else {
